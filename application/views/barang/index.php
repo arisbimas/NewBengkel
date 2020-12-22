@@ -93,7 +93,55 @@
           </div>            
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" name="tambah" id="AddBarang" onclick="executeAddBarang()">Simpan</button>
+            <button type="button" class="btn btn-primary" name="tambah" id="AddBarang" onclick="executeSaveBarang()">Simpan</button>
+          </div>
+        </form>
+      </div>      
+    </div>
+  </div>
+</div>
+
+<!-- Modal Edit Barang -->
+<div class="modal fade" id="popupEditBarang" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Barang</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="" method="post" action="" id="formEditBarang">    
+        <input type="hidden" id="hdn_KodeBarang">                
+          <div class="form-group">
+            <label for="txt_EditBarang_NamaBarang">Nama Barang</label>
+            <input type="text" class="form-control p-input" id="txt_EditBarang_NamaBarang" name="txt_EditBarang_NamaBarang" placeholder="Masukan Nama Barang">
+          </div>
+          <div class="form-group">
+            <label for="txt_EditBarang_Merk">Merk</label>
+            <!-- <input type="text" class="form-control p-input" id="txt_EditBarang_Merk" name="txt_EditBarang_Merk" placeholder="Masukan Merk"> -->
+            <?php echo $form_merk_edit; ?>
+          </div>          
+          <div class="form-group">
+            <label for="txt_EditBarang_HargaBeli">Harga Beli</label>
+            <input type="number" min="1" class="form-control p-input" id="txt_EditBarang_HargaBeli" name="txt_EditBarang_HargaBeli" placeholder="Masukan Harga Beli">              
+          </div>
+          <div class="form-group">
+            <label for="txt_EditBarang_HargaJual">Harga Jual</label>
+            <input type="number" min="1" class="form-control p-input" id="txt_EditBarang_HargaJual" name="txt_EditBarang_HargaJual" placeholder="Masukan Harga Jual">
+          </div>
+          <div class="form-group">
+            <label for="txt_EditBarang_Jumlah">Stok</label>
+            <input type="number" min="1" class="form-control p-input" id="txt_EditBarang_Jumlah" name="txt_EditBarang_Jumlah" placeholder="Masukan Jumlah">
+          </div>     
+          <div class="form-group">
+            <label for="txt_EditBarang_Diskon">Diskon</label>
+            <input type="number" min="1" max="100" class="form-control p-input" id="txt_EditBarang_Diskon" name="txt_EditBarang_Diskon" value="0" placeholder="Masukan Diskon">
+          </div>            
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" name="update" id="EditBarang" onclick="executeEditBarang()">Simpan</button>
           </div>
         </form>
       </div>      

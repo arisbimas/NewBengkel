@@ -97,4 +97,20 @@ class Barang_model extends CI_Model
         $this->db->where('kode_barang', $id);
         return $this->db->update('tbl_barang');
     }
+
+    public function get_barang_by_id($id)
+    {
+        $this->db->select("*");
+        $this->db->from("tbl_barang");
+        $this->db->where("kode_barang", $id);
+        $query = $this->db->get();
+        if(count($query->result()) > 0){
+            return $query->row(); 
+        }
+    }
+
+    public function update_barang($data)
+    {
+        return  $this->db->update("tbl_barang", $data,array('kode_barang' => $data["kode_barang"]));
+    }
 }

@@ -43,9 +43,12 @@ function initTableBarang() {
                 orderable: false,
                 render: function(data, type, row) {
                     var displayed;
+                    var btnEdit =
+                        '<button type="button" class="btn btn-info btn-sm mr-2" onclick="editBarang(this)">Edit</button>';
                     var btnHapus =
                         '<button type="button" class="btn btn-danger btn-sm" onclick="confirmHapusBarang(this)">Hapus</button>';
-                    displayed = btnHapus;
+
+                    displayed = btnEdit + btnHapus;
                     return displayed;
                 },
             },
@@ -71,7 +74,7 @@ function refreshTableBarang() {
     dttble.ajax.reload();
 }
 
-function executeAddBarang() {
+function executeSaveBarang() {
     //
     var namaBarang = $("#txt_AddBarang_NamaBarang").val();
     var id_merk = $("#txt_AddBarang_Merk :selected").val();
@@ -162,4 +165,85 @@ function hapusData(id) {
         });
 
     return result;
+}
+
+function showDetail(data) {
+    $("#hdn_KodeBarang").val(data.post.kode_barang);
+    $("#txt_EditBarang_NamaBarang").val(data.post.nama_brg);
+    $("#txt_EditBarang_Merk").val(data.post.id_merk);
+    $("#txt_EditBarang_HargaBeli").val(data.post.harga_beli);
+    $("#txt_EditBarang_HargaJual").val(data.post.harga_jual);
+    $("#txt_EditBarang_Jumlah").val(data.post.stok);
+    $("#txt_EditBarang_Diskon").val(data.post.diskon);
+}
+
+function editBarang(data) {
+    HoldOn.open();
+    var rowData = getRowData(data);
+    $.ajax({
+            url: baseUrl + "Barang/GetBarangById",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id_brg: rowData.kode_barang,
+            },
+        })
+        .done(function(data, status, jqXHR) {
+            if (data.response === "success") {
+                $("#popupEditBarang").modal("show");
+                showDetail(data);
+            } else {
+                showMessage(4, "Error!", data.message);
+            }
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            showMessage(4, "Error!", jqXHR);
+        })
+        .always(function() {
+            HoldOn.close();
+        });
+}
+
+function executeEditBarang() {
+    //
+    var kodeBarang = $("#hdn_KodeBarang").val();
+    var namaBarang = $("#txt_EditBarang_NamaBarang").val();
+    var id_merk = $("#txt_EditBarang_Merk :selected").val();
+    var merk = $("#txt_EditBarang_Merk :selected").text();
+    var hrgBeli = $("#txt_EditBarang_HargaBeli").val();
+    var hrgJual = $("#txt_EditBarang_HargaJual").val();
+    var jumlah = $("#txt_EditBarang_Jumlah").val();
+    var diskon = $("#txt_EditBarang_Diskon").val();
+
+    $.ajax({
+            url: baseUrl + "Barang/EditBarang",
+            type: "POST",
+            dataType: "json",
+            data: {
+                kode_barang: kodeBarang,
+                nama_brg: namaBarang,
+                id_merk: id_merk,
+                merk: merk,
+                harga_beli: hrgBeli,
+                harga_jual: hrgJual,
+                stok: jumlah,
+                diskon: diskon,
+            },
+        })
+        .done(function(data, status, jqXHR) {
+            if (data.response === "success") {
+                showMessage(1, "Success!", data.message);
+                $("#formEditBarang")[0].reset();
+                $("#popupEditBarang").modal("hide");
+                refreshTableBarang();
+            } else {
+                showMessage(4, "Error!", data.message);
+            }
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            showMessage(4, "Error!", "Can't Connect To Server.");
+        })
+        .always(function() {
+            //
+        });
 }

@@ -25,6 +25,7 @@ class Barang extends CI_Controller
         }
         $data['form_merk'] = form_dropdown('',$opt,'','id="merk_filter" class="form-control"');
         $data['form_merk_add'] = form_dropdown('',$opt,'','id="txt_AddBarang_Merk" class="form-control"');
+        $data['form_merk_edit'] = form_dropdown('',$opt,'','id="txt_EditBarang_Merk" class="form-control"');
 
         $this->load->view("templates/header", $data);
         $this->load->view("barang/index");
@@ -75,6 +76,7 @@ class Barang extends CI_Controller
             return 'BR0001';  
         }
     }
+
     public function AddBarang()
     {        
         if($this->input->is_ajax_request()){
@@ -93,9 +95,9 @@ class Barang extends CI_Controller
                 $ajax_data["tgl_msk"] = date('Y-m-d H:i:s');
                                 
                 if($this->barang->insert_new_barang($ajax_data)){
-                    $data = array("response" => "success", "message" => "Data Added Successfully.");
+                    $data = array("response" => "success", "message" => "Data Berhasil Ditambahkan.");
                 }else{
-                    $data = array("response" => "error", "message" => "Failed Add Data.");
+                    $data = array("response" => "error", "message" => "Data Gagal Ditambahkan.");
                 }
             }
         }else{
@@ -119,5 +121,49 @@ class Barang extends CI_Controller
         }
         echo json_encode($data);
     }
+
+    public function GetBarangById()
+    {
+        if($this->input->is_ajax_request()){
+            $id = $this->input->post('id_brg');
+            if($post = $this->barang->get_barang_by_id($id)){
+                $data = array("response" => "success", "message" => "Data Berhasil Didapat.", 'post'=>$post);
+            }else{
+                $data = array("response" => "error", "message" => "Data Gagal Didapat.");
+            }
+        }else{
+            echo("No direct script access allowed");
+        }
+        echo json_encode($data);
+    }
     
+    public function EditBarang()
+    {        
+        if($this->input->is_ajax_request()){
+            $this->form_validation->set_rules('nama_brg', 'Nama Barang', 'required');
+            $this->form_validation->set_rules('id_merk', 'Merk', 'required');
+            $this->form_validation->set_rules('harga_beli', 'Harga Beli', 'required|numeric');
+            $this->form_validation->set_rules('harga_jual', 'Harga Jual', 'required|numeric');
+            $this->form_validation->set_rules('stok', 'Jumlah', 'required|numeric');
+            $this->form_validation->set_rules('diskon', 'Diskon', 'required|numeric');
+
+            if($this->form_validation->run() == FALSE){
+                $data = array("response" => "error", "message" => validation_errors());
+            }else{
+                $ajax_data = $this->input->post();                
+                // $ajax_data["kode_barang"] = $this->kd_barang();
+                $ajax_data["tgl_msk"] = date('Y-m-d H:i:s');
+                                
+                if($this->barang->update_barang($ajax_data)){
+                    $data = array("response" => "success", "message" => "Data Berhasil Diubah.");
+                }else{
+                    $data = array("response" => "error", "message" => "Data Gagal Diubah.");
+                }
+            }
+        }else{
+            echo("No direct script access allowed");
+        }
+
+        echo json_encode($data);
+    }
 }
