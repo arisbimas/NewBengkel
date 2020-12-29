@@ -1,0 +1,18 @@
+/* .sidebar .nav {
+    padding: 0px 0px 0px 35px !important;
+} */
+
+.sidebar .nav .nav-item:last-child {
+    margin-bottom: unset !important;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    line-height: 60px;
+}
+
+.sidebar .nav.sub-menu {
+    padding-left: 3.6em;
+}

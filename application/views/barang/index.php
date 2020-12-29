@@ -30,7 +30,7 @@
               </div>                  	              
           </div>
           <div class="table-responsive">
-            <table class="table center-aligned-table table-striped table-hover table-sm" id="table">
+            <table class="table center-aligned-table table-striped table-hover table-sm" id="tableBarang">
               <thead>
                 <tr class="bg-warning">
                   <th>No</th>

@@ -5,7 +5,7 @@ function initializeContent() {
 function initTableBarang() {
     //datatables
     var table;
-    table = $("#table").DataTable({
+    table = $("#tableBarang").DataTable({
         processing: true, //Feature control the processing indicator.
         serverSide: true, //Feature control DataTables' server-side processing mode.
         order: [], //Initial no order.
@@ -20,7 +20,7 @@ function initTableBarang() {
         columns: [
             { data: null },
             { data: "kode_barang" },
-            { data: "nama_brg" },
+            { data: "nama_barang" },
             { data: "merk" },
             { data: "harga_beli" },
             { data: "harga_jual" },
@@ -32,7 +32,7 @@ function initTableBarang() {
                 targets: [0], //first column / numbering column
                 orderable: false, //set not orderable
                 render: function(data, type, row, meta) {
-                    var dtTable = $("#table").DataTable();
+                    var dtTable = $("#tableBarang").DataTable();
                     var pageSize = dtTable.page.len();
                     var pageIndex = dtTable.page.info().page;
                     return pageIndex * pageSize + meta.row + 1;
@@ -70,7 +70,7 @@ function initTableBarang() {
 }
 
 function refreshTableBarang() {
-    var dttble = $("#table").DataTable();
+    var dttble = $("#tableBarang").DataTable();
     dttble.ajax.reload();
 }
 
@@ -89,7 +89,7 @@ function executeSaveBarang() {
             type: "POST",
             dataType: "json",
             data: {
-                nama_brg: namaBarang,
+                nama_barang: namaBarang,
                 id_merk: id_merk,
                 merk: merk,
                 harga_beli: hrgBeli,
@@ -169,7 +169,7 @@ function hapusData(id) {
 
 function showDetail(data) {
     $("#hdn_KodeBarang").val(data.post.kode_barang);
-    $("#txt_EditBarang_NamaBarang").val(data.post.nama_brg);
+    $("#txt_EditBarang_NamaBarang").val(data.post.nama_barang);
     $("#txt_EditBarang_Merk").val(data.post.id_merk);
     $("#txt_EditBarang_HargaBeli").val(data.post.harga_beli);
     $("#txt_EditBarang_HargaJual").val(data.post.harga_jual);
@@ -221,7 +221,7 @@ function executeEditBarang() {
             dataType: "json",
             data: {
                 kode_barang: kodeBarang,
-                nama_brg: namaBarang,
+                nama_barang: namaBarang,
                 id_merk: id_merk,
                 merk: merk,
                 harga_beli: hrgBeli,

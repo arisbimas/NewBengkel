@@ -4,8 +4,8 @@
 class Barang_model extends CI_Model
 {
     var $table = 'tbl_barang';
-    var $column_order = array(null, 'nama_brg','id_merk','merk','harga_beli','harga_jual','stok','is_active'); //set column field database for datatable orderable
-    var $column_search = array('nama_brg','id_merk','merk','harga_beli','harga_jual','stok','is_active'); //set column field database for datatable searchable 
+    var $column_order = array(null, 'nama_barang','id_merk','merk','harga_beli','harga_jual','stok','is_active'); //set column field database for datatable orderable
+    var $column_search = array('nama_barang','id_merk','merk','harga_beli','harga_jual','stok','is_active'); //set column field database for datatable searchable 
     var $order = array('kode_barang' => 'asc'); // default order
     
     public function getAllBarang()

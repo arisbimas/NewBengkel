@@ -1,19 +1,23 @@
 <?php 
+defined('BASEPATH') or exit('No direct script access allowed');
 
 class Barang extends CI_Controller 
 {
      public function __construct()
     {
         parent::__construct();
+        is_logged_in();
+
         $this->load->model("Barang_model", 'barang');
         $this->load->model("Merk_model", 'merk');
-
+        $this->load->model("User_model", 'users');
         $this->load->library('form_validation');
     }
 
     public function index()
     {
         $data["judul"] = "Halaman Home";
+        $data['user'] = $this->users->getUserByUserLogin($this->session->userdata('user_login'));
         $data["barang"] = $this->barang->getAllBarang();
         // $data["jumlah_barang"] = $this->barang->getAllBarang_Count();
 
@@ -42,7 +46,7 @@ class Barang extends CI_Controller
         //     $row = array();
         //     $row[] = $no;
         //     $row[] = $barang->id_brg;
-        //     $row[] = $barang->nama_brg;
+        //     $row[] = $barang->nama_barang;
         //     $row[] = $barang->id_merk;
         //     $row[] = $barang->merk;
         //     $row[] = $barang->kompatibilitas;
@@ -80,7 +84,7 @@ class Barang extends CI_Controller
     public function AddBarang()
     {        
         if($this->input->is_ajax_request()){
-            $this->form_validation->set_rules('nama_brg', 'Nama Barang', 'required');
+            $this->form_validation->set_rules('nama_barang', 'Nama Barang', 'required');
             $this->form_validation->set_rules('id_merk', 'Merk', 'required');
             $this->form_validation->set_rules('harga_beli', 'Harga Beli', 'required|numeric');
             $this->form_validation->set_rules('harga_jual', 'Harga Jual', 'required|numeric');
@@ -92,7 +96,10 @@ class Barang extends CI_Controller
             }else{
                 $ajax_data = $this->input->post();                
                 $ajax_data["kode_barang"] = $this->kd_barang();
-                $ajax_data["tgl_msk"] = date('Y-m-d H:i:s');
+                $ajax_data["created_on"] = date('Y-m-d H:i:s');
+                $ajax_data["modified_on"] = date('Y-m-d H:i:s');
+                $ajax_data["created_by"] = "Aris";
+                $ajax_data["modified_by"] = "Aris";
                                 
                 if($this->barang->insert_new_barang($ajax_data)){
                     $data = array("response" => "success", "message" => "Data Berhasil Ditambahkan.");
@@ -140,7 +147,7 @@ class Barang extends CI_Controller
     public function EditBarang()
     {        
         if($this->input->is_ajax_request()){
-            $this->form_validation->set_rules('nama_brg', 'Nama Barang', 'required');
+            $this->form_validation->set_rules('nama_barang', 'Nama Barang', 'required');
             $this->form_validation->set_rules('id_merk', 'Merk', 'required');
             $this->form_validation->set_rules('harga_beli', 'Harga Beli', 'required|numeric');
             $this->form_validation->set_rules('harga_jual', 'Harga Jual', 'required|numeric');

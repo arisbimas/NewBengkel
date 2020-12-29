@@ -1,3 +1,7 @@
+<!-- show notif min barang -->
+<?php 
+  $minBarang = $this->db->get_where('tbl_barang', ['stok <=' => MINBARANG]);    
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,6 +27,7 @@
   <link rel="stylesheet" href="<?= base_url() ?>assets/toaster/toastr.min.css">
   <link rel="stylesheet" href="<?= base_url() ?>assets/loader/Holdon/HoldOn.min.css">
   <link rel="stylesheet" href="<?= base_url() ?>assets/css/style.css" />
+  <link rel="stylesheet" href="<?= base_url() ?>assets/css/site.css" />
   <link rel="shortcut icon" href="../favicon.ico" />
   <style>
     .brand-logo{
@@ -50,8 +55,8 @@
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar navbar-default col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div class="bg-white text-center navbar-brand-wrapper">
-        <a class="navbar-brand brand-logo" href="../partials/index.php">BengkelKu</a>
-        <a class="navbar-brand brand-logo-mini" href="../partials/index.php"><img src="<?= base_url() ?>assets/img/mini.jpg" alt=""></a>
+        <a class="navbar-brand brand-logo" href="<?= base_url() ?>">BengkelKu</a>
+        <a class="navbar-brand brand-logo-mini" href="<?= base_url() ?>"><img src="<?= base_url('assets/img/profile/'). $user['image'] ?>" alt=""></a>
       </div>
       <div class="navbar-menu-wrapper d-flex align-items-center">
         <button class="navbar-toggler navbar-toggler d-none d-lg-block navbar-dark align-self-center mr-3" type="button" data-toggle="minimize">
@@ -61,11 +66,11 @@
         <ul class="navbar-nav ml-lg-auto d-flex align-items-center flex-row">
           <li class="nav-item">
             <a class="nav-link profile-pic" href="#notif" data-toggle="modal" title="Notification"><i class="fa fa-bell faa-ring animated text-warning"></i><span class="label label-warning">
-              
+              <?= $minBarang->num_rows() ?>
             </span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link profile-pic" href="#"><img class="rounded-circle" src="<?= base_url() ?>assets/img/face.jpg" alt=""></a>
+            <a class="nav-link profile-pic" href="#"><img class="rounded-circle" src="<?= base_url('assets/img/profile/').$user['image'] ?>" alt=""></a>
           </li>          
           <li class="nav-item">
             <a class="nav-link" href="#logout" data-toggle="modal" title="Keluar"><i class="fa fa-power-off animated"></i></a>
@@ -84,10 +89,10 @@
         <!-- partial:partials/_sidebar.html -->
         <nav class="bg-white sidebar sidebar-offcanvas" id="sidebar">
           <div class="user-info">
-            <img src="<?= base_url() ?>assets/img/face.jpg" alt="">
+            <img src="<?= base_url('assets/img/profile/').$user['image'] ?>" alt="">
             
             <p class="name">
-              
+              <?= $user['name'] ?>
             </p>
             <p class="designation">
               
@@ -95,99 +100,64 @@
             <span class="online"></span>
           </div>
           <ul class="nav">
-            <li class="nav-item active">
-              <a class="nav-link" href="../partials/index.php">
-                <i class="fab fa-slack mr-4 fa-2x"></i>
-                <span class="menu-title">Dashboard</span>
-              </a>
-            </li>
-            
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="collapse" href="#master" aria-expanded="false" aria-controls="dropdown">
-                <i class="fas fa-box-open mr-3 fa-2x text-warning"></i>
-                <span class="menu-title">Master <i class="fas fa-chevron-circle-down"></i></span>
-              </a>
-              <div class="collapse" id="master">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item">
-                    <a class="nav-link" href="<?= base_url() ?>Barang/index">
-                      <i class="fa fa-angle-right"></i>Barang
-                    </a>
-                  </li>                        
-                </ul>
-              </div>
-            </li>
-            
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="collapse" href="#dropdown" aria-expanded="false" aria-controls="dropdown">
-                <i class="fa fa-dolly mr-3 fa-2x text-success"></i>
-                <span class="menu-title">Transaksi <i class="fas fa-chevron-circle-down"></i></span>
-              </a>
-              <div class="collapse" id="dropdown">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item">
-                    <a class="nav-link" href="../transaksi/brg_masuk.php">
-                      <i class="fa fa-angle-right"></i>Barang Masuk
-                    </a>
-                  </li>
+            <!-- query menu -->
+            <?php
+              $role_id = $user['role_id'];
+              $queryMenu = "SELECT `tbl_menu`.*
+              FROM `tbl_menu` JOIN `tbl_rolexmenu`
+              ON `tbl_menu`.`id` = `tbl_rolexmenu`.`menu_id`
+              WHERE `tbl_rolexmenu`.`role_id` = $role_id AND `tbl_menu`.`id_parent` = 0
+              ORDER BY `tbl_rolexmenu`.`menu_id` ASC";
 
-                  <li class="nav-item">
-                    <a class="nav-link" href="../transaksi/brg_kirim.php">
-                      <i class="fa fa-angle-left"></i>Barang Kirim
-                    </a>
-                  </li>
+              $menu = $this->db->query($queryMenu)->result_array();
+              
+            ?>
+            <!-- Looping for parent menu -->
+            <?php foreach ($menu as $m) : ?>
+              <!-- check has child menu -->
+              <?php 
+                $menu_id = $m['id'];
+                $querySubMenu = "SELECT `tbl_menu`.*
+                FROM `tbl_menu` JOIN `tbl_rolexmenu`
+                ON `tbl_menu`.`id` = `tbl_rolexmenu`.`menu_id`
+                WHERE `tbl_rolexmenu`.`role_id` = $role_id AND `tbl_menu`.`id_parent` = $menu_id
+                ORDER BY `tbl_rolexmenu`.`menu_id` ASC";
 
-                  <li class="nav-item">
-                    <a class="nav-link" href="../transaksi/jual.php">
-                      <i class="fa fa-angle-left"></i>Penjualan
-                    </a>
-                  </li>                  
-                </ul>
-              </div>
-            </li>
+                $subMenu = $this->db->query($querySubMenu);
+              ?>
 
-             <li class="nav-item">
-              <a class="nav-link" data-toggle="collapse" href="#pgw" aria-expanded="false" aria-controls="pgw">
-                <i class="fa fa-user-circle mr-4 fa-2x" style="color: lightpink"></i>
-                <span class="menu-title">Pegawai <i class="fas fa-chevron-circle-down"></i></span>
-              </a>
-              <div class="collapse" id="pgw">
-                <ul class="nav flex-column sub-menu">
+              <!-- if parent have child menu -->
+              <?php if($subMenu->num_rows() > 0): ?>
+                <li class="nav-item">
+                  <a class="nav-link" data-toggle="collapse" href="#<?= $m['url'] ?>" aria-expanded="false" aria-controls="dropdown">
+                    <i class="fas fa-box-open mr-3 fa-2x text-warning"></i>
+                    <span class="menu-title">Master <i class="fas fa-chevron-circle-down"></i></span>
+                  </a>
+                  <div class="collapse" id="<?= $m['url'] ?>">
+                    <ul class="nav flex-column sub-menu">
+                      <!-- print dropdown -->
+                      <?php foreach($subMenu->result_array() as $sm): ?>
+                        <li class="nav-item">
+                          <a class="nav-link" href="<?= base_url($sm['url']) ?>">
+                            <i class="<?= $sm['icon'] ?>"></i><?= $sm['title'] ?>
+                          </a>
+                        </li>                      
+                      <?php endforeach ?>                                                               
+                    </ul>
+                  </div>
+                </li>
+
+                <!-- else parnt havnt child menu -->
+                <?php else: ?>
                   <li class="nav-item">
-                    <a class="nav-link" href="../users/users.php">
-                      <i class="fa fa-angle-right"></i>Users
+                    <a class="nav-link" href="<?= base_url($m['url']) ?>">
+                      <i class="<?= $m['icon'] ?>"></i>
+                      <span class="menu-title"><?= $m['title'] ?></span>
                     </a>
                   </li>
-
-                  <li class="nav-item">
-                    <a class="nav-link" href="../users/montir.php">
-                      <i class="fa fa-angle-left"></i>Montir
-                    </a>
-                  </li>                  
-                </ul>
-              </div>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="../transaksi/jual.php">                
-                <i class="fa fa-cart-plus mr-3 fa-2x" style="color: lightpink"></i>
-                <span class="menu-title">Penjualan</span>                
-              </a>
-            </li>
-            
-            <!-- <li class="nav-item">
-              <a class="nav-link" href="../transaksi/jasa.php">                
-                <i class="fa fa-wrench mr-4 fa-2x" style="color: coral"></i>
-                <span class="menu-title">Jasa</span>                
-              </a>
-            </li> -->
-
-            <li class="nav-item">
-              <a class="nav-link" href="../transaksi/today.php">                
-                <i class="fab fa-trello mr-4 fa-2x" style="color: lightseagreen"></i>
-                <span class="menu-title">Today</span>                
-              </a>
-            </li>          
+              <?php endif ?>
+              
+            <?php endforeach ?>                                          
             
           </ul>
         </nav>
@@ -199,17 +169,17 @@
       <div class="modal-content">              
         <div class="modal-body text-center">
           <h3><i class="fa fa-question-circle"></i></h3>
-          <h4><strong>Apakah Anda Akan Keluar???</strong></h4>
+          <h4><strong>Keluar Dari Sistem?</strong></h4>
         <hr>
         <div class="text-center">
-          <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-danger ml-2" href="../partials/logout.php">Yes!</a>          
+          <button class="btn btn-secondary" data-dismiss="modal">Batal</button>
+          <a class="btn btn-danger ml-2" href="<?= base_url('auth/logout') ?>">Ya!</a>          
         </div>
         </div>      
       </div>
     </div>
   </div>
-
+  
   <div class="modal fade mt-3" id="notif" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -220,7 +190,11 @@
           </button>
         </div>              
         <div class="modal-body">
-         
+          <?php foreach($minBarang->result_array() as $minBrg) :?>
+            <div style='padding:5px' class='alert alert-warning'>
+              <span class='glyphicon glyphicon-info-sign'></span> Stok  <a style='color:red'><?= $minBrg['nama_barang']; ?></a> yang tersisa sudah kurang dari <?= MINBARANG ?> . silahkan pesan lagi !!
+            </div>
+          <?php endforeach ?>
         </div>
         </div>      
       </div>
