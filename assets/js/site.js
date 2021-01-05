@@ -14,7 +14,7 @@ $(document).ready(function() {
     }
 });
 
-function showMessage(type, header, body) {
+function showMessage(type, header, body, position) {
     var msgType;
     switch (type) {
         case (type = 1):
@@ -31,13 +31,23 @@ function showMessage(type, header, body) {
             break;
     }
 
+    var positionMsg;
+    switch (position) {
+        case (position = 1):
+            positionMsg = "toast-top-center";
+            break;
+        default:
+            positionMsg = "toast-top-right";
+            break;
+    }
+
     Command: toastr[msgType](body, header);
     toastr.options = {
         closeButton: true,
         debug: false,
         newestOnTop: false,
         progressBar: true,
-        positionClass: "toast-top-right",
+        positionClass: positionMsg,
         preventDuplicates: false,
         onclick: null,
         showDuration: "400",

@@ -16,8 +16,36 @@ class Barang_model extends CI_Model
     public function getAllBarang_Count()
     {
         return $this->db->get("tbl_barang")->num_rows();
+    }    
+
+    public function insert_new_barang($data)
+    {
+        return $this->db->insert('tbl_barang', $data);
     }
-    
+
+    public function delete_barang($id)
+    {        
+        $this->db->set('is_active', "false", FALSE);
+        $this->db->where('kode_barang', $id);
+        return $this->db->update('tbl_barang');
+    }
+
+    public function get_barang_by_id($id)
+    {
+        $this->db->select("*");
+        $this->db->from("tbl_barang");
+        $this->db->where("kode_barang", $id);
+        $query = $this->db->get();
+        if(count($query->result()) > 0){
+            return $query->row(); 
+        }
+    }
+
+    public function update_barang($data)
+    {
+        return  $this->db->update("tbl_barang", $data,array('kode_barang' => $data["kode_barang"]));
+    }
+
     private function _get_datatables_query()
     {
          
@@ -84,33 +112,5 @@ class Barang_model extends CI_Model
     {
         $this->db->from($this->table);
         return $this->db->count_all_results();
-    }
-
-    public function insert_new_barang($data)
-    {
-        return $this->db->insert('tbl_barang', $data);
-    }
-
-    public function delete_barang($id)
-    {        
-        $this->db->set('is_active', "false", FALSE);
-        $this->db->where('kode_barang', $id);
-        return $this->db->update('tbl_barang');
-    }
-
-    public function get_barang_by_id($id)
-    {
-        $this->db->select("*");
-        $this->db->from("tbl_barang");
-        $this->db->where("kode_barang", $id);
-        $query = $this->db->get();
-        if(count($query->result()) > 0){
-            return $query->row(); 
-        }
-    }
-
-    public function update_barang($data)
-    {
-        return  $this->db->update("tbl_barang", $data,array('kode_barang' => $data["kode_barang"]));
     }
 }

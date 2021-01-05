@@ -9,8 +9,8 @@ function is_logged_in()
         $role_id = $ci->session->userdata('role_id');
         $controller = $ci->uri->segment(1);
         $action = $ci->uri->segment(2);
-        if(empty($action)){
-            $menu = $controller.'/'.$action;
+        if($action){
+            $menu = $controller.'/'.$action;            
         }else{
             $menu = $controller;
         }    
@@ -21,6 +21,8 @@ function is_logged_in()
             'role_id' => $role_id,
             'menu_id' => $menu_id
         ]);
+
+        
         
         if ($userAccess->num_rows() < 1) {
             redirect('auth/blocked');

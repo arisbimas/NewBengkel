@@ -11,8 +11,11 @@
   <link rel="stylesheet" href="<?= base_url() ?>assets/css/style.css" />
   <link rel="shortcut icon" href="<?= base_url() ?>assets/images/favicon.png" />
   <style>
-    .content-wrapper {
-        background: #59e6cc7a;
+    .content-wrapper {        
+        background-image: url(<?= base_url("assets/img/mechanic.jpg") ?>);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
     .auth-pages .form-control {
         border: 1px solid #d1d3e2;

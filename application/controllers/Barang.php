@@ -6,7 +6,11 @@ class Barang extends CI_Controller
      public function __construct()
     {
         parent::__construct();
-        is_logged_in();
+        if($this->input->is_ajax_request()){
+
+        }else{
+            is_logged_in();
+        }        
 
         $this->load->model("Barang_model", 'barang');
         $this->load->model("Merk_model", 'merk');
@@ -73,7 +77,7 @@ class Barang extends CI_Controller
         if ($chek->num_rows() > 0) {
             $chek=$chek->row_array();
             $laskode = $chek['kode_barang'];
-            $ambil = substr($laskode, 3, 4) + 1;
+            $ambil = substr($laskode, 2, 4) + 1;
             $newcode = "BR" . sprintf("%04s", $ambil);
             return $newcode;
         }else{
@@ -98,13 +102,13 @@ class Barang extends CI_Controller
                 $ajax_data["kode_barang"] = $this->kd_barang();
                 $ajax_data["created_on"] = date('Y-m-d H:i:s');
                 $ajax_data["modified_on"] = date('Y-m-d H:i:s');
-                $ajax_data["created_by"] = "Aris";
-                $ajax_data["modified_by"] = "Aris";
+                $ajax_data["created_by"] = $this->session->userdata('user_login');
+                $ajax_data["modified_by"] = $this->session->userdata('user_login');
                                 
                 if($this->barang->insert_new_barang($ajax_data)){
-                    $data = array("response" => "success", "message" => "Data Berhasil Ditambahkan.");
+                    $data = array("response" => "success", "message" => "Transaksi Berhasil Disimpan.");
                 }else{
-                    $data = array("response" => "error", "message" => "Data Gagal Ditambahkan.");
+                    $data = array("response" => "error", "message" => "Transaksi Gagal Disimpan.");
                 }
             }
         }else{

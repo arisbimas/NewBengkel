@@ -6,13 +6,18 @@
     margin-bottom: unset !important;
 }
 
-.footer {
+
+/* .footer {
     position: absolute;
     bottom: 0;
     width: 100%;
     line-height: 60px;
-}
+} */
 
 .sidebar .nav.sub-menu {
     padding-left: 3.6em;
+}
+
+.modal-xl {
+    max-width: 1140px !important;
 }

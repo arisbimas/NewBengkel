@@ -103,6 +103,7 @@ function executeSaveBarang() {
                 showMessage(1, "Success!", data.message);
                 $("#formAddBarang")[0].reset();
                 $("#popupAddBarang").modal("hide");
+                refreshTableBarang();
             } else {
                 showMessage(4, "Error!", data.message);
             }
