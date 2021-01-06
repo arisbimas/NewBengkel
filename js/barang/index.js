@@ -11,7 +11,7 @@ function initTableBarang() {
         order: [], //Initial no order.
         // Load data for the table's content from an Ajax source
         ajax: {
-            url: baseUrl + "home/ListBarang",
+            url: baseUrl + "Barang/ListBarang",
             type: "POST",
             data: function(data) {
                 data.merk_filter = $("#merk_filter").val();
@@ -44,9 +44,9 @@ function initTableBarang() {
                 render: function(data, type, row) {
                     var displayed;
                     var btnEdit =
-                        '<button type="button" class="btn btn-info btn-sm mr-2" onclick="editBarang(this)">Edit</button>';
+                        '<button type="button" class="btn btn-outline-info btn-sm mr-2" onclick="editBarang(this)">Edit</button>';
                     var btnHapus =
-                        '<button type="button" class="btn btn-danger btn-sm" onclick="confirmHapusBarang(this)">Hapus</button>';
+                        '<button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmHapusBarang(this)">Hapus</button>';
 
                     displayed = btnEdit + btnHapus;
                     return displayed;

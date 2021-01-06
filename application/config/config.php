@@ -3,7 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 date_default_timezone_set('Asia/Jakarta');
 
 //MY CONSTANT
-define('MINBARANG','20');
+define('MINBARANG','10');
+define('MYBRAND', "BengkelKu");
 
 /*
 |--------------------------------------------------------------------------

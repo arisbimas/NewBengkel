@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Barang extends CI_Controller 
 {
-     public function __construct()
+    public function __construct()
     {
         parent::__construct();
         if($this->input->is_ajax_request()){
@@ -20,7 +20,7 @@ class Barang extends CI_Controller
 
     public function index()
     {
-        $data["judul"] = "Halaman Home";
+        $data["judul"] = "Master Barang";
         $data['user'] = $this->users->getUserByUserLogin($this->session->userdata('user_login'));
         $data["barang"] = $this->barang->getAllBarang();
         // $data["jumlah_barang"] = $this->barang->getAllBarang_Count();

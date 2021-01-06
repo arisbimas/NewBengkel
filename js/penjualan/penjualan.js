@@ -15,7 +15,7 @@ function initTableBarangModal() {
         order: [], //Initial no order.
         // Load data for the table's content from an Ajax source
         ajax: {
-            url: baseUrl + "home/ListBarang",
+            url: baseUrl + "Barang/ListBarang",
             type: "POST",
             data: function(data) {
                 data.merk_filter = $("#merk_filter").val();
@@ -61,7 +61,7 @@ function initTableBarangModal() {
                 render: function renderLinkEdit(data, type, row) {
                     var displayed;
                     var btnSelect =
-                        '<button type="button" class="btn btn-info btn-sm mr-2" onclick="selectBarang(this)">Pilih</button>';
+                        '<button type="button" class="btn btn-outline-info btn-sm mr-2" onclick="selectBarang(this)">Pilih</button>';
                     displayed = btnSelect;
                     return displayed;
                 },
@@ -132,7 +132,7 @@ function initTableCart() {
                 orderable: false,
                 render: function renderLinkEdit(data, type, row, meta) {
                     var btnCancel =
-                        '<button type="button" class="btn btn-danger" onclick="cancelCartItem(this)">Batal</button>';
+                        '<button type="button" class="btn btn-outline-danger btn-sm" onclick="cancelCartItem(this)">Batal</button>';
                     return btnCancel;
                 },
             },
@@ -211,7 +211,7 @@ function addToCart() {
     //check is barang selected
     if (selectedBarang) {
         //check qty != 0
-        if (qty !== 0) {
+        if (qty !== 0 && qty > 0) {
             if (localStorage.getItem("listCart")) {
                 var cart = JSON.parse(localStorage.getItem("listCart"));
             } else {
@@ -283,7 +283,7 @@ function addToCart() {
                 showMessage(2, "Sucess!", "Berhasil Ditambahkan ke Keranjang.");
             }
         } else {
-            showMessage(3, "Warning!", "Masukan Jumlah Beli Barang!");
+            showMessage(3, "Warning!", "Masukan Jumlah Beli Barang dengan Benar!");
         }
     } else {
         showMessage(3, "Warning!", "Pilih Barang Dulu!");

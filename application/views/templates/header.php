@@ -9,7 +9,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>BengkelKu</title>
+  <title><?= MYBRAND ?> - <?= $judul ?></title>
   <link rel="stylesheet" href ="<?= base_url() ?>assets/bootstrap/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href ="<?= base_url() ?>assets/fontawesome/css/all.css" />
   <link rel="stylesheet" href="<?= base_url() ?>assets/fontawesome/css/font-awesome-animation.min.css" />
@@ -56,7 +56,7 @@
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar navbar-default col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div class="bg-white text-center navbar-brand-wrapper">
-        <a class="navbar-brand brand-logo" href="<?= base_url() ?>">BengkelKu</a>
+        <a class="navbar-brand brand-logo" href="<?= base_url() ?>"><?= MYBRAND ?></a>
         <a class="navbar-brand brand-logo-mini" href="<?= base_url() ?>"><img src="<?= base_url('assets/img/profile/'). $user['image'] ?>" alt=""></a>
       </div>
       <div class="navbar-menu-wrapper d-flex align-items-center">
@@ -190,12 +190,18 @@
             Close
           </button>
         </div>              
-        <div class="modal-body">
-          <?php foreach($minBarang->result_array() as $minBrg) :?>
-            <div style='padding:5px' class='alert alert-warning'>
-              <span class='glyphicon glyphicon-info-sign'></span> Stok  <a style='color:red'><?= $minBrg['nama_barang']; ?></a> yang tersisa sudah kurang dari <?= MINBARANG ?> . silahkan pesan lagi !!
-            </div>
-          <?php endforeach ?>
+        <div class="modal-body p-0">
+          <ul class="list-group">
+            <?php if($minBarang->num_rows() > 0): ?>
+              <?php foreach($minBarang->result_array() as $minBrg) :?>
+                <li class="list-group-item">Stok  <a class="text-danger"><?= $minBrg['nama_barang']; ?></a> yang tersisa <?= $minBrg['stok'] ?>. Silahkan pesan lagi !</li>              
+              <?php endforeach ?>
+            <?php else :?>
+              <li class="list-group-item text-center">Tidak ada notifikasi.</li>
+            <?php endif ?>
+            
+          </ul>
+          
         </div>
         </div>      
       </div>
@@ -208,6 +214,7 @@
 <script src="<?= base_url() ?>assets/dataTables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url() ?>assets/dataTables/dataTables.bootstrap4.min.js"></script>
 <script src="<?= base_url() ?>assets/perfect-scrollbar/dist/js/perfect-scrollbar.jquery.min.js"></script>
+<script src="<?= base_url() ?>assets/chart.js/dist/Chart.min.js"></script>
 <script src="<?= base_url() ?>assets/toaster/toastr.min.js"></script>
 <script src="<?= base_url() ?>assets/sweetalert2/package/dist/sweetalert2.all.min.js"></script>
 <script src="<?= base_url() ?>assets/loader/HoldOn/HoldOn.min.js"></script>

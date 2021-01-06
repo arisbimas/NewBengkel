@@ -87,13 +87,13 @@ class Penjualan extends CI_Controller
             if ($this->db->trans_status() === FALSE) {
                 # Something went wrong.
                 $this->db->trans_rollback();
-                $data = array("response" => "error", "message" => "Data Gagal Ditambahkan.");
+                $data = array("response" => "error", "message" => "Transaksi Gagal Disimpan.");
             } 
             else {
                 # Everything is Perfect. 
                 # Committing data to the database.
                 $this->db->trans_commit();
-                $data = array("response" => "success", "message" => "Data Berhasil Ditambahkan.");
+                $data = array("response" => "success", "message" => "Transaksi Berhasil Disimpan.");
             }
         }else{
             echo("No direct script access allowed");

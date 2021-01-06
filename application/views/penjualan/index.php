@@ -10,7 +10,7 @@
                 <div class="input-group">
                     <input type="text" class="form-control p-input" id="txt_Barang_NamaBarang" name="txt_Barang_NamaBarang" placeholder="Nama Barang" disabled>
                     <div class="input-group-append">
-                        <button class="btn btn-success mx-1" type="button" data-toggle="modal" data-target="#popupBarang"><i class="fas fa-search fa-2x"></i></button>
+                        <button class="btn btn-outline-success mx-1" type="button" data-toggle="modal" data-target="#popupBarang"><i class="fas fa-search fa-2x"></i></button>
                     </div>
                 </div>                
             </div>
