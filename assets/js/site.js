@@ -1,4 +1,7 @@
+var checkCookie;
 $(document).ready(function() {
+    startCheckCookie();
+
     function isFunctionExist(fn) {
         if (typeof fn !== "undefined" && typeof fn === "function") {
             return true;
@@ -66,4 +69,51 @@ function getRowData(element) {
     var tbl_DataTable = tbl.DataTable();
     var data = tbl_DataTable.row($(element).parents("tr")).data();
     return data;
+}
+
+function startCheckCookie() {
+    checkCookie = setInterval("getCookie()", 20000);
+}
+
+function stopCheckCookie() {
+    clearInterval(checkCookie);
+}
+
+function getCookie() {
+    var cookie = decodeURIComponent(document.cookie);
+    //console.log(cookie);
+    if (cookie) {
+        var listCookie = cookie.split("&");
+        var split1 = listCookie[1].split("=");
+        var splitDate = split1[1].split("+").join(" ");
+        var newDate = new Date(splitDate);
+        var now = new Date();
+        if (now >= newDate) {
+            logOut();
+            stopCheckCookie();
+        }
+    }
+}
+
+function logOut() {
+    //do some
+    $.ajax({
+            url: baseUrl + "Auth/logout",
+            type: "POST",
+            dataType: "json",
+            data: {},
+        })
+        .done(function(data, status, jqXHR) {
+            if (data.response === "success") {
+                $(location).attr("href", baseUrl + "Auth");
+            } else {
+                showMessage(4, "Error!", "Gagal Logout.");
+            }
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            showMessage(4, "Error!", "Can't Connect To Server.");
+        })
+        .always(function() {
+            //
+        });
 }

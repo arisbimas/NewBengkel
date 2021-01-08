@@ -8,7 +8,7 @@
             <div class="row">
               <div class="col-lg-9 mb-2">
                 <button type="button" data-toggle="modal" data-target="#popupAddMerk" class="btn btn-outline-success mr-2"><i class="fa fa-plus"></i> Merk Baru</button>
-                <a href="../export/lap_master_brg.php" class="btn btn-secondary mr-2"><i class="fa fa-print"></i> Export File</a>
+                <!-- <a href="<?= base_url("merk/laporan_semua_merk") ?>" target="_blank" class="btn btn-secondary mr-2"><i class="fa fa-print"></i> Laporan Semua Merk</a> -->
               </div>              
               <div class="col-lg-3">                  
                 <h6 class="float-right">Jumlah Data = <span id="jmlRecordMerk"></span></h6>

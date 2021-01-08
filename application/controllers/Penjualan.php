@@ -100,4 +100,14 @@ class Penjualan extends CI_Controller
         }                
         echo json_encode($data);
     }
+
+    public function ListPenjualan()
+    {
+        $data["judul"] = "Halaman List Penjualan";
+        $data['user'] = $this->users->getUserByUserLogin($this->session->userdata('user_login'));
+        
+        $this->load->view("templates/header", $data);
+        $this->load->view("penjualan/list-penjualan.php");
+        $this->load->view("templates/footer");
+    }
 }

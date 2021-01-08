@@ -26,7 +26,7 @@ class Auth extends CI_Controller
 		} else {
 			$this->_login();
 		}
-	}
+	}	
 
 	private function _login()
 	{
@@ -45,11 +45,15 @@ class Auth extends CI_Controller
 					];
 
 					$this->session->set_userdata($data);
+					set_my_cookie();
+
 					if ($user['role_id'] == 1) {
 						redirect('dashboard');
 					} else {
 						redirect('user');
 					}
+					
+					
 				} else {
 					$this->session->set_flashdata("message", '<div class="alert alert-danger" role="alert">Invalid Password.</div>');
 					redirect("auth");
@@ -104,10 +108,25 @@ class Auth extends CI_Controller
 
 	public function logout()
 	{
-		$this->session->unset_userdata("user_login");
-		$this->session->unset_userdata("role_id");
-		$this->session->set_flashdata("message", '<div class="alert alert-success" role="alert">You has been logout.</div>');
-		redirect("auth");
+		$cookie = get_cookie("user_data");
+        if($cookie){
+            $listCookie = explode("&",$cookie);
+            $explodeUserLogin = $listCookie[0];
+			$explodeUserLoginName= explode("=", $explodeUserLogin);
+			if($explodeUserLoginName[1] == $this->session->userdata('user_login')){
+				
+				$this->session->unset_userdata("user_login");
+				$this->session->unset_userdata("role_id");
+				delete_cookie('user_data');
+				$this->session->set_flashdata("message", '<div class="alert alert-success" role="alert">You has been logout.</div>');	
+				if($this->input->is_ajax_request()){
+					$data = array("response"=> "success", "message"=>"User berhasil logout.");
+					echo json_encode($data);
+				}else{											
+					redirect("auth");
+				}
+			}
+        }			
 	}
 
 	public function blocked()

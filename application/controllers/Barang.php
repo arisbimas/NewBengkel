@@ -24,7 +24,7 @@ class Barang extends CI_Controller
         $data['user'] = $this->users->getUserByUserLogin($this->session->userdata('user_login'));
         $data["barang"] = $this->barang->getAllBarang();
         // $data["jumlah_barang"] = $this->barang->getAllBarang_Count();
-
+        
         //create select option
         $merks = $this->merk->getAllMerk(); 
         $opt = array('' => 'Semua Merk');
@@ -176,5 +176,17 @@ class Barang extends CI_Controller
         }
 
         echo json_encode($data);
+    }
+
+    public function laporan_semua_barang(){
+
+        $data["barang"] = $this->barang->getAllBarang();
+
+        $this->load->library('pdf');
+
+        $this->pdf->setPaper('A4', 'potrait');
+        $this->pdf->filename = "laporan-semua-barang-".date('d-m-Y')."pdf";
+        $this->pdf->load_view('barang/laporan_semua_barang', $data);
+
     }
 }

@@ -131,8 +131,8 @@
               <?php if($subMenu->num_rows() > 0): ?>
                 <li class="nav-item">
                   <a class="nav-link" data-toggle="collapse" href="#<?= $m['url'] ?>" aria-expanded="false" aria-controls="dropdown">
-                    <i class="fas fa-box-open mr-3 fa-2x text-warning"></i>
-                    <span class="menu-title">Master <i class="fas fa-chevron-circle-down"></i></span>
+                    <i class="<?= $m['icon'] ?>"></i>
+                    <span class="menu-title"><?= $m['title'] ?> <i class="fas fa-chevron-circle-down"></i></span>
                   </a>
                   <div class="collapse" id="<?= $m['url'] ?>">
                     <ul class="nav flex-column sub-menu">
