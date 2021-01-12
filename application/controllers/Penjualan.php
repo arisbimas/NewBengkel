@@ -53,6 +53,7 @@ class Penjualan extends CI_Controller
             $penjualan = array(
                 'nomor_faktur' => $no_faktur,
                 'total_harga' => $total_harga,
+                // 'tgl_transaksi'=> date('Y-m-d'),
                 'created_on' => date('Y-m-d H:i:s'),
                 'created_by' => $this->session->userdata('user_login') 
             );            
@@ -65,8 +66,10 @@ class Penjualan extends CI_Controller
                 array_push($dataArr, array(
                     'nomor_faktur' => $no_faktur,
                     'kode_barang' => $d->{'kode_barang'},
+                    'nama_barang' => $d->{'nama_barang'},
                     'jumlah_beli' => $d->{'jumlah_beli'},
                     'sub_total' => $d->{'sub_total'},
+                    // 'tgl_transaksi' => date('Y-m-d'),
                     'created_on' => date('Y-m-d H:i:s'),
                     'created_by' => $this->session->userdata('user_login')              
                 ));
@@ -110,4 +113,76 @@ class Penjualan extends CI_Controller
         $this->load->view("penjualan/list-penjualan.php");
         $this->load->view("templates/footer");
     }
+
+    public function ListDataPenjualan()
+    {
+        $list = $this->penjualan->get_datatables();
+ 
+        $output = array(
+                    "draw" => $_POST['draw'],
+                    "recordsTotal" => $this->penjualan->count_all(),
+                    "recordsFiltered" => $this->penjualan->count_filtered(),
+                    "data" => $list,
+                );
+        //output to json format
+        echo json_encode($output);
+    }
+
+    public function GetDetailPenjualanByFaktur() {
+        if($this->input->is_ajax_request()){
+            $noFaktur = $this->input->post('nomor_faktur');
+            if($post = $this->penjualan->get_detail_penjualan_by_faktur($noFaktur)){
+                
+                $data = array("response" => "success", "message" => "Data Berhasil Didapat.", 'ListData'=>$post);
+            }else{
+                $data = array("response" => "error", "message" => "Data Gagal Didapat.");
+            }
+        }else{
+            echo("No direct script access allowed");
+        }
+        echo json_encode($data);
+    }
+
+    public function laporan_hari_ini(){
+
+        $data["penjualan"] = $this->penjualan->getDataPenjualanByDay();
+        $data["tanggal"] = date("d-m-Y");
+
+        $this->load->library('pdf');
+
+        $this->pdf->setPaper('A4', 'potrait');
+        $this->pdf->filename = "laporan-penjualan-harian-".date('d-m-Y')."pdf";
+        $this->pdf->load_view('penjualan/laporan_hari_ini', $data);
+
+    }
+
+    public function laporan_mingguan(){
+
+        $data["penjualan"] = $this->penjualan->getDataPenjualanByWeek();
+        $data["hariIni"] = date("d-m-Y");
+        $date =  mktime(0, 0, 0, date("m"), date("d")-7, date("Y"));        
+        $data["mingguLalu"] = date("d-m-Y", $date);
+
+        $this->load->library('pdf');
+
+        $this->pdf->setPaper('A4', 'potrait');
+        $this->pdf->filename = "laporan-penjualan-mingguan.pdf";
+        $this->pdf->load_view('penjualan/laporan_mingguan', $data);
+
+    }
+
+    public function laporan_bulanan(){
+
+        $data["penjualan"] = $this->penjualan->getDataPenjualanByMonth();
+        $bulan = ["Januari","Februari","Maret","April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November","Desember"];
+        $data["bulanIni"] = $bulan[date("m")-1];
+
+        $this->load->library('pdf');
+
+        $this->pdf->setPaper('A4', 'potrait');
+        $this->pdf->filename = "laporan-penjualan-bulanan.pdf";
+        $this->pdf->load_view('penjualan/laporan_bulanan', $data);
+
+    }
+
 }

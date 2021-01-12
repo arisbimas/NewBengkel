@@ -22,8 +22,9 @@ class Barang extends CI_Controller
     {
         $data["judul"] = "Master Barang";
         $data['user'] = $this->users->getUserByUserLogin($this->session->userdata('user_login'));
-        $data["barang"] = $this->barang->getAllBarang();
+        //$data["barang"] = $this->barang->getAllBarang();
         // $data["jumlah_barang"] = $this->barang->getAllBarang_Count();
+        
         
         //create select option
         $merks = $this->merk->getAllMerk(); 

@@ -1,3 +1,5 @@
+let totalHarga;
+
 function initializeContent() {
     localStorage.removeItem("selectedBarang");
     localStorage.removeItem("listCart");
@@ -7,6 +9,7 @@ function initializeContent() {
 }
 
 function initTableBarangModal() {
+    HoldOn.open();
     //datatables
     var table;
     table = $("#tableBarang").DataTable({
@@ -44,6 +47,18 @@ function initTableBarangModal() {
                     return pageIndex * pageSize + meta.row + 1;
                 },
             },
+            {
+                targets: [4],
+                render: function renderLinkEdit(data, type, row) {
+                    return formatNumberID(data);
+                },
+            },
+            {
+                targets: [5],
+                render: function renderLinkEdit(data, type, row) {
+                    return formatNumberID(data);
+                },
+            },
             // {
             //     targets: [8],
             //     orderable: false,
@@ -78,6 +93,8 @@ function initTableBarangModal() {
         $("#form-filter")[0].reset();
         table.ajax.reload(); //just reload table
     });
+
+    HoldOn.close();
 }
 
 function refreshTableBarang() {
@@ -87,6 +104,7 @@ function refreshTableBarang() {
 
 function initTableCart() {
     //
+    HoldOn.open();
     var table;
     table = $("#tableCart").DataTable({
         processing: true, //Feature control the processing indicator.
@@ -128,6 +146,18 @@ function initTableCart() {
                 },
             },
             {
+                targets: [4],
+                render: function renderLinkEdit(data, type, row) {
+                    return formatNumberID(data);
+                },
+            },
+            {
+                targets: [7],
+                render: function renderLinkEdit(data, type, row) {
+                    return formatNumberID(data);
+                },
+            },
+            {
                 targets: [8],
                 orderable: false,
                 render: function renderLinkEdit(data, type, row, meta) {
@@ -159,9 +189,11 @@ function initTableCart() {
                 }, 0);
 
             // Update footer
-            $(api.column(7).footer()).html(pageTotal);
+            $(api.column(7).footer()).html(formatNumberIDR(pageTotal));
+            totalHarga = pageTotal;
         },
     });
+    HoldOn.close();
 }
 
 function refreshTableCart() {
@@ -299,7 +331,7 @@ function execute() {
                 dataType: "json",
                 data: {
                     listCart: localStorage.getItem("listCart"),
-                    totalHarga: $("#totalHarga").text(),
+                    totalHarga: totalHarga,
                 },
             })
             .done(function(data, status, jqXHR) {

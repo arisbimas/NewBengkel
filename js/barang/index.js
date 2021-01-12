@@ -15,6 +15,7 @@ function initTableBarang() {
             type: "POST",
             data: function(data) {
                 data.merk_filter = $("#merk_filter").val();
+                data.date_filter = $("#date_filter").val();
             },
         },
         columns: [
@@ -36,6 +37,12 @@ function initTableBarang() {
                     var pageSize = dtTable.page.len();
                     var pageIndex = dtTable.page.info().page;
                     return pageIndex * pageSize + meta.row + 1;
+                },
+            },
+            {
+                targets: [4, 5],
+                render: function renderLinkEdit(data, type, row) {
+                    return formatNumberID(data);
                 },
             },
             {

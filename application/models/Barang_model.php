@@ -4,8 +4,8 @@
 class Barang_model extends CI_Model
 {
     var $table = 'tbl_barang';
-    var $column_order = array(null, 'nama_barang','id_merk','merk','harga_beli','harga_jual','stok','is_active'); //set column field database for datatable orderable
-    var $column_search = array('nama_barang','id_merk','merk','harga_beli','harga_jual','stok','is_active'); //set column field database for datatable searchable 
+    var $column_order = array(null, 'nama_barang','id_merk','merk','harga_beli','harga_jual','stok','is_active','created_on'); //set column field database for datatable orderable
+    var $column_search = array('nama_barang','id_merk','merk','harga_beli','harga_jual','stok','is_active','created_on'); //set column field database for datatable searchable 
     var $order = array('kode_barang' => 'asc'); // default order
     
     public function getAllBarang()
@@ -61,6 +61,8 @@ class Barang_model extends CI_Model
             {
                 $this->db->where('id_merk', $this->input->post('merk_filter'));
             }
+
+            
 
             if($_POST['search']['value']) // if datatable send POST for search
             {

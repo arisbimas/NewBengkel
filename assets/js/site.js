@@ -2,6 +2,24 @@ var checkCookie;
 $(document).ready(function() {
     startCheckCookie();
 
+    $(".datepicker").datepicker({
+        format: "d M yyyy",
+        autoclose: true,
+        clearBtn: true,
+        todayHighlight: true,
+    });
+
+    $(".datepicker")
+        .next()
+        .children(".input-group-text")
+        .click(function() {
+            try {
+                $(this).parent().prev().datepicker("show");
+            } catch (error) {
+                console.log(error);
+            }
+        });
+
     function isFunctionExist(fn) {
         if (typeof fn !== "undefined" && typeof fn === "function") {
             return true;
@@ -116,4 +134,18 @@ function logOut() {
         .always(function() {
             //
         });
+}
+
+function formatNumberIDR(number) {
+    return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+    }).format(number);
+}
+
+function formatNumberID(number) {
+    return new Intl.NumberFormat("id-ID", {
+        minimumFractionDigits: 0,
+    }).format(number);
 }

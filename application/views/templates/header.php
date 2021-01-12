@@ -18,7 +18,7 @@
   <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'> -->
-  <link rel="stylesheet" href="<?= base_url() ?>assets/perfect-scrollbar/dist/css/perfect-scrollbar.min.css" />
+  <!-- <link rel="stylesheet" href="<?= base_url() ?>assets/perfect-scrollbar/dist/css/perfect-scrollbar.min.css" /> -->
   <link rel="stylesheet" href="<?= base_url() ?>assets/dataTables/dataTables.bootstrap4.min.css"  />
   <!-- Select2 -->
   <link rel="stylesheet" href="<?= base_url() ?>assets/select2/dist/css/select2.min.css">
@@ -213,14 +213,15 @@
 <script src="<?= base_url() ?>assets/bootstrap/dist/js/bootstrap.min.js"></script>        
 <script src="<?= base_url() ?>assets/dataTables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url() ?>assets/dataTables/dataTables.bootstrap4.min.js"></script>
-<script src="<?= base_url() ?>assets/perfect-scrollbar/dist/js/perfect-scrollbar.jquery.min.js"></script>
+<script src="<?= base_url() ?>assets/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+<!-- <script src="<?= base_url() ?>assets/perfect-scrollbar/dist/js/perfect-scrollbar.jquery.min.js"></script> -->
 <script src="<?= base_url() ?>assets/chart.js/dist/Chart.min.js"></script>
 <script src="<?= base_url() ?>assets/toaster/toastr.min.js"></script>
 <script src="<?= base_url() ?>assets/sweetalert2/package/dist/sweetalert2.all.min.js"></script>
 <script src="<?= base_url() ?>assets/loader/HoldOn/HoldOn.min.js"></script>
 <script src="<?= base_url() ?>assets/js/off-canvas.js"></script>
 <script src="<?= base_url() ?>assets/js/hoverable-collapse.js"></script>
-<script src="<?= base_url() ?>assets/js/misc.js"></script>
+<!-- <script src="<?= base_url() ?>assets/js/misc.js"></script> -->
 <script src="<?= base_url() ?>assets/js/chart.js"></script>
 <script src="<?= base_url() ?>assets/js/maps.js"></script>
 <script type="text/javascript">

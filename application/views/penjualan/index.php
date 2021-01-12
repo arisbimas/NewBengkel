@@ -73,7 +73,7 @@
               </tbody>
               <tfoot>
                 <tr>
-                    <th colspan="7" style="text-align:right" class="pr-0">Total: Rp.</th>
+                    <th colspan="7" style="text-align:right" class="pr-0">Total:</th>
                     <th id="totalHarga"></th>
                 </tr>                    
               </tfoot>

@@ -23,6 +23,9 @@
                     <div class="form-group mx-2">
                       <?php echo $form_merk; ?>
                     </div>
+                    <div class="form-group">
+                      <input type="text" class="form-control datepicker" id="date_filter" name="filterDate" placeholder="dd mm yyyy">
+                    </div>
                     <button type="button" id="btn-filter" class="btn btn-primary mx-1">Filter</button>
                     <button type="button" id="btn-reset" class="btn btn-default ">Reset</button>
                   </form>
