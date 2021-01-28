@@ -126,7 +126,17 @@ class Auth extends CI_Controller
 					redirect("auth");
 				}
 			}
-        }			
+        }else{
+			$this->session->unset_userdata("user_login");
+			$this->session->unset_userdata("role_id");
+			$this->session->set_flashdata("message", '<div class="alert alert-success" role="alert">You has been logout.</div>');	
+			if($this->input->is_ajax_request()){
+				$data = array("response"=> "success", "message"=>"User berhasil logout.");
+				echo json_encode($data);
+			}else{											
+				redirect("auth");
+			}
+		}			
 	}
 
 	public function blocked()

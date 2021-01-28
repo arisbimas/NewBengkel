@@ -19,6 +19,135 @@ class Penjualan extends CI_Controller
         $this->load->library('form_validation');
     }
 
+    public function cetak_struk($listData=[], $totalHarga=null, $noFak=null, $returnVal=false)
+    {
+        // me-load library escpos
+        $this->load->library('escpos');
+ 
+        try {
+            
+            // membuat connector printer ke shared printer bernama "printer_58mm" (yang telah disetting sebelumnya)
+            $connector = new Escpos\PrintConnectors\WindowsPrintConnector("printer_5mm");
+    
+            // membuat objek $printer agar dapat di lakukan fungsinya
+            $printer = new Escpos\Printer($connector);
+    
+    
+            // membuat fungsi untuk membuat 1 baris tabel, agar dapat dipanggil berkali-kali dgn mudah
+            function buatBaris4Kolom($kolom1, $kolom2, $kolom3, $kolom4) {
+                // Mengatur lebar setiap kolom (dalam satuan karakter)
+                $lebar_kolom_1 = 11;
+                $lebar_kolom_2 = 3;
+                $lebar_kolom_3 = 6;
+                $lebar_kolom_4 = 9;
+    
+                // Melakukan wordwrap(), jadi jika karakter teks melebihi lebar kolom, ditambahkan \n 
+                $kolom1 = wordwrap($kolom1, $lebar_kolom_1, "\n", true);
+                $kolom2 = wordwrap($kolom2, $lebar_kolom_2, "\n", true);
+                $kolom3 = wordwrap($kolom3, $lebar_kolom_3, "\n", true);
+                $kolom4 = wordwrap($kolom4, $lebar_kolom_4, "\n", true);
+    
+                // Merubah hasil wordwrap menjadi array, kolom yang memiliki 2 index array berarti memiliki 2 baris (kena wordwrap)
+                $kolom1Array = explode("\n", $kolom1);
+                $kolom2Array = explode("\n", $kolom2);
+                $kolom3Array = explode("\n", $kolom3);
+                $kolom4Array = explode("\n", $kolom4);
+    
+                // Mengambil jumlah baris terbanyak dari kolom-kolom untuk dijadikan titik akhir perulangan
+                $jmlBarisTerbanyak = max(count($kolom1Array), count($kolom2Array), count($kolom3Array), count($kolom4Array));
+    
+                // Mendeklarasikan variabel untuk menampung kolom yang sudah di edit
+                $hasilBaris = array();
+    
+                // Melakukan perulangan setiap baris (yang dibentuk wordwrap), untuk menggabungkan setiap kolom menjadi 1 baris 
+                for ($i = 0; $i < $jmlBarisTerbanyak; $i++) {
+    
+                    // memberikan spasi di setiap cell berdasarkan lebar kolom yang ditentukan, 
+                    $hasilKolom1 = str_pad((isset($kolom1Array[$i]) ? $kolom1Array[$i] : ""), $lebar_kolom_1, " ");
+                    $hasilKolom2 = str_pad((isset($kolom2Array[$i]) ? $kolom2Array[$i] : ""), $lebar_kolom_2, " ");
+    
+                    // memberikan rata kanan pada kolom 3 dan 4 karena akan kita gunakan untuk harga dan total harga
+                    $hasilKolom3 = str_pad((isset($kolom3Array[$i]) ? $kolom3Array[$i] : ""), $lebar_kolom_3, " ", STR_PAD_LEFT);
+                    $hasilKolom4 = str_pad((isset($kolom4Array[$i]) ? $kolom4Array[$i] : ""), $lebar_kolom_4, " ", STR_PAD_LEFT);
+    
+                    // Menggabungkan kolom tersebut menjadi 1 baris dan ditampung ke variabel hasil (ada 1 spasi disetiap kolom)
+                    $hasilBaris[] = $hasilKolom1 . " " . $hasilKolom2 . " " . $hasilKolom3 . " " . $hasilKolom4;
+                }
+    
+                // Hasil yang berupa array, disatukan kembali menjadi string dan tambahkan \n disetiap barisnya.
+                return implode($hasilBaris, "\n") . "\n";
+            }   
+            
+            $listData = json_decode(stripslashes($this->input->post('listCart')));
+            $totalHarga = $this->input->post('totalHarga');
+            if ($this->input->post('NomorFaktur')) {
+                $noFak = json_decode($this->input->post('NomorFaktur'));
+            }
+            if($this->input->post('WithReturn')){
+                $returnVal = true;
+            }   
+
+            $dataArr = array();
+            foreach($listData as $d){
+                    array_push($dataArr, array(
+                        'kode_barang' => $d->{'kode_barang'},
+                        'nama_barang' => $d->{'nama_barang'},
+                        'harga_jual' => $d->{'harga_jual'},
+                        'jumlah_beli' => $d->{'jumlah_beli'},
+                        'sub_total' => $d->{'sub_total'}             
+                    ));                
+                }
+
+            // Membuat judul
+            $printer->initialize();
+            $printer->selectPrintMode(Escpos\Printer::MODE_DOUBLE_HEIGHT); // Setting teks menjadi lebih besar
+            $printer->setJustification(Escpos\Printer::JUSTIFY_CENTER); // Setting teks menjadi rata tengah
+            $printer->text(MYBRAND."\n");        
+            $printer->text($noFak."\n");
+            $printer->text("\n");
+    
+            // Data transaksi        
+            $printer->initialize();
+            $printer->text("Aktor : ".$this->session->userdata('user_login')."\n");
+            $day = hariIni(date ("D"));
+            $printer->text("Waktu : ".$day.", ".date("d-m-y h:i:s")."\n");
+    
+            // Membuat tabel
+            $printer->initialize(); // Reset bentuk/jenis teks
+            $printer->text("--------------------------------\n");
+            $printer->text(buatBaris4Kolom("Barang", "Qty", "Harga", "Subtotal"));
+            $printer->text("--------------------------------\n");
+                    
+            foreach ($dataArr as $list ) {
+                $printer->text(buatBaris4Kolom($list["nama_barang"], $list["jumlah_beli"], number_format($list["harga_jual"]), number_format($list["sub_total"])));
+            }
+
+            $printer->text("--------------------------------\n");
+            $printer->setJustification(Escpos\Printer::JUSTIFY_CENTER);
+            $printer-> setTextSize(2, 1);
+            if(strpos($totalHarga, "Rp") === false){
+                $totalHarga = "Rp ".number_format($totalHarga,0,'','.');
+            }
+            $printer->text("Total ".$totalHarga."\n");
+            $printer->text("\n");
+    
+            // Pesan penutup
+            $printer->initialize();
+            $printer->setJustification(Escpos\Printer::JUSTIFY_CENTER);
+            $printer->text("Terima kasih telah berbelanja\n");
+            $printer->text("http://bengkelku.com\n");
+    
+            $printer->feed(5); // mencetak 5 baris kosong agar terangkat (pemotong kertas saya memiliki jarak 5 baris dari toner)
+            if($returnVal){
+                echo json_encode(array("response" => "success"));
+            }            
+            $printer->close();         
+            
+        } catch (Exception $e) {
+            echo json_encode("TIDAK TERKONEKSI DENGAN PRINTER: " . $e -> getMessage() . "\n");    
+        }
+    }
+
     public function index()
     {
         $data["judul"] = "Halaman Penjualan";
@@ -34,12 +163,12 @@ class Penjualan extends CI_Controller
         $chek = $ci->db->query("select nomor_faktur from tbl_penjualan order by nomor_faktur DESC");
         if ($chek->num_rows() > 0) {
             $chek=$chek->row_array();
-            $laskode = $chek['nomor_faktur'];
-            $ambil = substr($laskode, 2, 4) + 1;
-            $newcode = "FK" . sprintf("%04s", $ambil).date("dmY");
+            $laskode = $chek['nomor_faktur'];        
+            $ambil = substr($laskode, 13, 4)+1;
+            $newcode = "INV/" . date("dmY")."/".sprintf("%04s", $ambil);
             return $newcode;
         }else{
-            return 'FK0001'.date("dmY");  
+            return 'INV/'.date("dmY/")."0001";  
         }
     }
 
@@ -67,6 +196,7 @@ class Penjualan extends CI_Controller
                     'nomor_faktur' => $no_faktur,
                     'kode_barang' => $d->{'kode_barang'},
                     'nama_barang' => $d->{'nama_barang'},
+                    'harga_jual' => $d->{'harga_jual'},
                     'jumlah_beli' => $d->{'jumlah_beli'},
                     'sub_total' => $d->{'sub_total'},
                     // 'tgl_transaksi' => date('Y-m-d'),
@@ -92,7 +222,7 @@ class Penjualan extends CI_Controller
                 $this->db->trans_rollback();
                 $data = array("response" => "error", "message" => "Transaksi Gagal Disimpan.");
             } 
-            else {
+            else {                
                 # Everything is Perfect. 
                 # Committing data to the database.
                 $this->db->trans_commit();
@@ -101,7 +231,11 @@ class Penjualan extends CI_Controller
         }else{
             echo("No direct script access allowed");
         }                
-        echo json_encode($data);
+        echo json_encode($data);        
+        if($data["response"] == "success"){
+            $this->cetak_struk($dataArr, $total_harga, $no_faktur,false);
+        }
+        
     }
 
     public function ListPenjualan()

@@ -43,6 +43,9 @@ function is_logged_in()
             'menu_id' => $menu_id
         ]);
 
+        // var_dump($userAccess->result());
+        // exit;
+
         if($queryMenu){
             if ($userAccess->num_rows() < 1) {
                 redirect('auth/blocked');
@@ -52,4 +55,43 @@ function is_logged_in()
         }
         
     }
+}
+
+function hariIni($day)
+{
+    switch($day){
+        case 'Sun':
+            $hari_ini = "Minggu";
+        break;
+
+        case 'Mon':			
+            $hari_ini = "Senin";
+        break;
+
+        case 'Tue':
+            $hari_ini = "Selasa";
+        break;
+
+        case 'Wed':
+            $hari_ini = "Rabu";
+        break;
+
+        case 'Thu':
+            $hari_ini = "Kamis";
+        break;
+
+        case 'Fri':
+            $hari_ini = "Jumat";
+        break;
+
+        case 'Sat':
+            $hari_ini = "Sabtu";
+        break;
+        
+        default:
+            $hari_ini = "Tidak di ketahui";		
+        break;
+    }
+
+    return $hari_ini;
 }

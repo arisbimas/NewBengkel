@@ -110,6 +110,9 @@ function getCookie() {
             logOut();
             stopCheckCookie();
         }
+    } else {
+        logOut();
+        stopCheckCookie();
     }
 }
 

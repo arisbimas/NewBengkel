@@ -106,7 +106,7 @@ function initTableCart() {
     //
     HoldOn.open();
     var table;
-    table = $("#tableCart").DataTable({
+    table = $("#tableCart1").DataTable({
         processing: true, //Feature control the processing indicator.
         serverSide: true, //Feature control DataTables' server-side processing mode.
         order: [], //Initial no order.
@@ -124,10 +124,10 @@ function initTableCart() {
             callback({ data: carts });
         },
         columns: [
-            { data: null },
-            { data: "kode_barang" },
+            // data: null },
+            // { data: "kode_barang" },
             { data: "nama_barang" },
-            { data: "merk" },
+            // { data: "merk" },
             { data: "harga_jual" },
             { data: "diskon" },
             { data: "jumlah_beli" },
@@ -135,30 +135,31 @@ function initTableCart() {
             { data: "kode_barang" },
         ],
         //Set column definition initialisation properties.
-        columnDefs: [{
-                targets: [0], //first column / numbering column
-                orderable: false, //set not orderable
-                render: function(data, type, row, meta) {
-                    var dtTable = $("#tableCart").DataTable();
-                    var pageSize = dtTable.page.len();
-                    var pageIndex = dtTable.page.info().page;
-                    return pageIndex * pageSize + meta.row + 1;
-                },
-            },
+        columnDefs: [
+            // {
+            //     targets: [0], //first column / numbering column
+            //     orderable: false, //set not orderable
+            //     render: function(data, type, row, meta) {
+            //         var dtTable = $("#tableCart1").DataTable();
+            //         var pageSize = dtTable.page.len();
+            //         var pageIndex = dtTable.page.info().page;
+            //         return pageIndex * pageSize + meta.row + 1;
+            //     },
+            // },
             {
-                targets: [4],
+                targets: [1, 4],
                 render: function renderLinkEdit(data, type, row) {
                     return formatNumberID(data);
                 },
             },
+            // {
+            //     targets: [7],
+            //     render: function renderLinkEdit(data, type, row) {
+            //         return formatNumberID(data);
+            //     },
+            // },
             {
-                targets: [7],
-                render: function renderLinkEdit(data, type, row) {
-                    return formatNumberID(data);
-                },
-            },
-            {
-                targets: [8],
+                targets: [5],
                 orderable: false,
                 render: function renderLinkEdit(data, type, row, meta) {
                     var btnCancel =
@@ -182,14 +183,14 @@ function initTableCart() {
 
             // Total over this page
             pageTotal = api
-                .column(7, { page: "current" })
+                .column(4, { page: "current" })
                 .data()
                 .reduce(function(a, b) {
                     return intVal(a) + intVal(b);
                 }, 0);
 
             // Update footer
-            $(api.column(7).footer()).html(formatNumberIDR(pageTotal));
+            $(api.column(4).footer()).html(formatNumberIDR(pageTotal));
             totalHarga = pageTotal;
         },
     });
@@ -197,7 +198,7 @@ function initTableCart() {
 }
 
 function refreshTableCart() {
-    var dttble = $("#tableCart").DataTable();
+    var dttble = $("#tableCart1").DataTable();
     dttble.ajax.reload();
 }
 

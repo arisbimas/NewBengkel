@@ -70,7 +70,8 @@
               <th>No</th>
               <th>Nomor Faktur</th>
               <th>Kode Barang</th>  
-              <th>Nama Barang</th>                  
+              <th>Nama Barang</th> 
+              <th>Harga</th>                  
               <th>Jumlah Beli</th>                    
               <th>Sub Total</th> 
             </tr>
@@ -80,11 +81,15 @@
           </tbody>
           <tfoot>
                 <tr>
-                    <th colspan="5" style="text-align:right" class="pr-0">Total:</th>
+                    <th colspan="6" style="text-align:right" class="pr-0">Total:</th>
                     <th id="totalHarga"></th>
                 </tr>                    
               </tfoot>
         </table>
+        <div class="col-sm-12 ">
+          <!-- <a href="<?= base_url("penjualan/cetak_struk") ?>" class="btn btn-outline-info float-right mx-3 px-5">Cetak</a> -->
+              <button class="btn btn-outline-info float-right mx-3 px-5" onclick="cetakStruk()"><i class="fas fa-file-invoice"> Cetak Struk</i> </button>
+        </div>
       </div>      
     </div>
   </div>

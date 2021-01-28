@@ -1,8 +1,11 @@
 let detailPenjualan = [];
+let nomorFaktur;
 
 function initializeContent() {
+    HoldOn.open();
     initTablePenjualan();
     initTableDetailPenjualan();
+    HoldOn.close();
 }
 
 function initTablePenjualan() {
@@ -91,6 +94,7 @@ function showDetail(data) {
 function viewPenjualan(data) {
     HoldOn.open();
     var rowData = getRowData(data);
+    nomorFaktur = rowData.nomor_faktur;
     $.ajax({
             url: baseUrl + "Penjualan/GetDetailPenjualanByFaktur",
             type: "POST",
@@ -136,6 +140,7 @@ function initTableDetailPenjualan() {
             { data: "nomor_faktur" },
             { data: "kode_barang" },
             { data: "nama_barang" },
+            { data: "harga_jual" },
             { data: "jumlah_beli" },
             { data: "sub_total" },
         ],
@@ -151,7 +156,7 @@ function initTableDetailPenjualan() {
                 },
             },
             {
-                targets: [5],
+                targets: [5, 6],
                 render: function renderLinkEdit(data, type, row) {
                     return formatNumberID(data);
                 },
@@ -172,14 +177,14 @@ function initTableDetailPenjualan() {
 
             // Total over this page
             pageTotal = api
-                .column(5, { page: "current" })
+                .column(6, { page: "current" })
                 .data()
                 .reduce(function(a, b) {
                     return intVal(a) + intVal(b);
                 }, 0);
 
             //  Update footer
-            $(api.column(5).footer()).html(formatNumberIDR(pageTotal));
+            $(api.column(6).footer()).html(formatNumberIDR(pageTotal));
         },
     });
 }
@@ -187,4 +192,31 @@ function initTableDetailPenjualan() {
 function refreshTableDetailPenjualan() {
     var dttble = $("#tableDetailPenjualan").DataTable();
     dttble.ajax.reload();
+}
+
+function cetakStruk() {
+    $.ajax({
+            url: baseUrl + "Penjualan/cetak_struk",
+            type: "POST",
+            dataType: "json",
+            data: {
+                listCart: JSON.stringify(detailPenjualan),
+                totalHarga: $("#totalHarga").text(),
+                NomorFaktur: JSON.stringify(nomorFaktur),
+                WithReturn: true,
+            },
+        })
+        .done(function(data, status, jqXHR) {
+            if (data.response === "success") {
+                showMessage(1, "Success!", data.message);
+            } else {
+                showMessage(4, "Error!", data.message);
+            }
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            showMessage(4, "Error!", "Can't Connect To Server.");
+        })
+        .always(function() {
+            //
+        });
 }

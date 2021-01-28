@@ -1,9 +1,11 @@
 <div class="content-wrapper">
-  <h3 class="page-heading mb-4">Pilih Barang</h3>
+  <!-- <h3 class="page-heading mb-4">Pilih Barang</h3> -->
   <div class="row mb-2">
-    <div class="col-lg-6">
+    <div class="col-lg-5">
       <div class="card">
         <div class="card-body">
+        <h5 class="card-title">Pilih Barang</h5>
+        <hr>
           <form class="col-sm-12" method="post" action="" id="formPilihBarang">                    
             <div class="form-group">
                 <label for="txt_Barang_NamaBarang">Nama Barang</label>                
@@ -46,9 +48,45 @@
         </div>
       </div>
     </div>
+    <div class="col-sm-7">
+      <div class="card">
+        <div class="card-body">
+        <h5 class="card-title">Keranjang</h5>
+        <hr>
+          <div class="table-responsive">
+            <table class="table table-striped table-hover table-lg" id="tableCart1">
+              <thead>
+                <tr class="">
+                  <th>Nama Barang</th>       
+                  <th>Harga Jual</th>
+                  <th>Diskon</th>
+                  <th>Jumlah Beli</th>
+                  <th>Sub Total</th>
+                  <th class="mx-auto">Aksi</th>                   
+                </tr>
+              </thead>
+              <tbody>
+                    
+              </tbody>
+              <tfoot>
+                <tr>
+                    <th colspan="4" style="text-align:right" class="pr-0">Total:</th>
+                    <th id="totalHarga"></th>
+                </tr>                    
+              </tfoot>
+              
+            </table>
+            
+          </div>
+          <div class="col-sm-12 ">
+              <button class="btn btn-success float-right mx-3 px-5" onclick="execute()"><i class="fas fa-file-invoice"> Beli</i> </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   
-  <h3 class="page-heading mt-4 mb-4">Keranjang</h3>
+  <!-- <h3 class="page-heading mt-4 mb-4">Keranjang</h3>
   <div class="row mb-2">
     <div class="col-lg-12">
       <div class="card">
@@ -87,7 +125,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </div>
   
 <!-- Modal Pilih Barang -->
